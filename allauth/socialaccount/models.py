@@ -21,6 +21,8 @@ from allauth.socialaccount.adapter import get_adapter
 from allauth.socialaccount.internal import statekit
 from allauth.utils import get_request_param
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 if not allauth_settings.SOCIALACCOUNT_ENABLED:
     raise ImproperlyConfigured(
@@ -331,6 +333,8 @@ class SocialLogin:
             self._store_token()
             return True
         except SocialAccount.DoesNotExist:
+            return False
+        except User.DoesNotExist:
             return False
 
     def _store_token(self) -> None:
